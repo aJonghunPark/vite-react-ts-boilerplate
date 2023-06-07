@@ -22,7 +22,7 @@ yarn dev
 
 こんなページが表示されたら成功！
 
-![スクリーンショット 2023-06-07 18.20.51.png](/attachment/64804c22459f4557bce70848)
+![vite-react-ts.png](./doc/vite-react-ts.png)
 
 ## install prettier
 
