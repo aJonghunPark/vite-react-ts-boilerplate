@@ -1,4 +1,4 @@
-# vite + react + typesciprt + prettier + jest
+# vite + react + typescript + prettier + jest
 
 ## summary
 
