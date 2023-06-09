@@ -3,12 +3,12 @@
 ## summary
 
 案外とスムーズに進んでいてよかったが。
-Jestを追加する時、色々とトラブルが爆発した。
+Jest を追加する時、色々とトラブルが爆発した。
 忘れないようにメモして残す。
 
 ## create a project
 
-templateとしてreact-tsを指定してプロジェクトを生成すると、typescript、eslintまでインストールされるため、eslint --initなど別途のコマンドを実行する必要はない。[参照](https://vitejs.dev/guide/)
+template として react-ts を指定してプロジェクトを生成すると、typescript、eslint までインストールされるため、eslint --init など別途のコマンドを実行する必要はない。[参照](https://vitejs.dev/guide/)
 
 ```sh
 yarn create vite <project_name> --template react-ts
@@ -26,13 +26,13 @@ yarn dev
 
 ## install prettier
 
-prettier関連パッケージをインストールする。
+prettier 関連パッケージをインストールする。
 
 ```sh
 yarn add -D prettier eslint-config-prettier eslint-plugin-prettier prettier-eslint prettier-standard @trivago/prettier-plugin-sort-imports
 ```
 
-prettierの設定ファイルを作成する。
+prettier の設定ファイルを作成する。
 
 ```json:.prettierrc
 {
@@ -43,8 +43,8 @@ prettierの設定ファイルを作成する。
 }
 ```
 
-eslintの設定ファイルにprettier関連設定を追加。
-envにnode: trueを追加。
+eslint の設定ファイルに prettier 関連設定を追加。
+env に node: true を追加。
 project: "./tsconfig.json"を追加。
 
 ```javascript:.eslintrc.cjs
@@ -69,7 +69,7 @@ module.exports = {
 };
 ```
 
-tsconfig.jsonのincludeに.eslintrc.cjsを追加。
+tsconfig.json の include に.eslintrc.cjs を追加。
 
 ```json:tsconfig.json
 {
@@ -99,13 +99,13 @@ tsconfig.jsonのincludeに.eslintrc.cjsを追加。
 }
 ```
 
-prettierの動作を確認する。
+prettier の動作を確認する。
 
 ```sh
 prettier -c .
 ```
 
-prettierでformattingを行う。
+prettier で formatting を行う。
 
 ```sh
 prettier --write .
@@ -119,7 +119,7 @@ prettier --write .
 yarn add -D jest ts-jest babel-jest @types/jest @testing-library/react @testing-library/jest-dom @testing-library/dom @testing-library/user-event jest-environment-jsdom identity-obj-proxy esbuild esbuild-jest
 ```
 
-jestの設定ファイルを作成する。
+jest の設定ファイルを作成する。
 
 ```javascript:jest.config.cjs
 module.exports = {
@@ -148,7 +148,7 @@ module.exports = {
 };
 ```
 
-tsconfig.jsonのincludeにjest.config.cjsを追加。
+tsconfig.json の include に jest.config.cjs を追加。
 
 ```json:tsconfig.json
 ... snip ...
@@ -157,7 +157,7 @@ tsconfig.jsonのincludeにjest.config.cjsを追加。
 }
 ```
 
-アセットでテストが失敗しないようにfileTransformer.jsを用意する。（jestの公式サイトで出たもの）
+アセットでテストが失敗しないように fileTransformer.js を用意する。（jest の公式サイトで出たもの）
 
 ```javascript:fileTransformer.js
 const path = require('path');
@@ -171,7 +171,7 @@ module.exports = {
 };
 ```
 
-tsconfig.jsonのincludeにfileTransformer.jsを追加。
+tsconfig.json の include に fileTransformer.js を追加。
 
 ```json:tsconfig.json
 ... snip ...
@@ -180,19 +180,19 @@ tsconfig.jsonのincludeにfileTransformer.jsを追加。
 }
 ```
 
-そうしても以下のようにeslint errorが表示される。
+そうしても以下のように eslint error が表示される。
 
 ```javascript:fileTransformer.js
 const path = require("path"); // E: Require statement not part of import statement.
 ```
 
-指摘されたところをimport文で直さないといけない。
+指摘されたところを import 文で直さないといけない。
 
 ```javascript:fileTransformer.js
 import * as path from "path";
 ```
 
-直したら、eslint errorが消えた。
+直したら、eslint error が消えた。
 ちゃんとテストができるかテストファイルを用意して確認する。
 
 ```javascript:App.test.tsx
@@ -236,9 +236,9 @@ Time:        0.56 s, estimated 1 s
 Ran all test suites within paths "src/App.test.tsx".
 ```
 
-vite.svgファイルを探せない。
-vite.svgファイルはsrc/assetsではなくpublicの配下にあった。
-public/vite.svg -> src/assets/vite.svgへコピーしてファイルのパスを修正した後、もう一度テストする。
+vite.svg ファイルを探せない。
+vite.svg ファイルは src/assets ではなく public の配下にあった。
+public/vite.svg -> src/assets/vite.svg へコピーしてファイルのパスを修正した後、もう一度テストする。
 
 ```sh
 Test Suites: 0 of 1 total
@@ -253,8 +253,8 @@ the '.cjs' file extension.
     at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
 ```
 
-fileTransformer.jsがES方式ではないCommonJS方式で書かれていると指摘している。
-CRAからのmigrationの時はこれで問題なかったが、Viteからreact-tsのtemplateで新規プロジェクトを生成する時は以下のように修正する必要がある。[参照](https://jestjs.io/docs/28.x/upgrading-to-jest28#transformer)
+fileTransformer.js が ES 方式ではない CommonJS 方式で書かれていると指摘している。
+CRA からの migration の時はこれで問題なかったが、Vite から react-ts の template で新規プロジェクトを生成する時は以下のように修正する必要がある。[参照](https://jestjs.io/docs/28.x/upgrading-to-jest28#transformer)
 
 **修正版**
 
@@ -293,36 +293,36 @@ Time:        0.544 s
 Ran all test suites within paths "src/App.test.tsx".
 ```
 
-"React is not defined"は、App.tsxとApp.test.tsxの中でReactをimportすればいいが。
+"React is not defined"は、App.tsx と App.test.tsx の中で React を import すればいいが。
 
 ```javascript:App.tsx
 import React from "react"
 ```
 
-React v17以降からはこれを書く必要がない。
-tsconfig.jsonで以下のように設定されている場合は、自動でReactをimportするらしい。
+React v17 以降からはこれを書く必要がない。
+tsconfig.json で以下のように設定されている場合は、自動で React を import するらしい。
 
 ```json:tsconfig.json
 "jsx": "react-jsx",
 ```
 
-react-jsxをreactに変更すると、React v16までのように手動でReactをimportしないといけない。
+react-jsx を react に変更すると、React v16 までのように手動で React を import しないといけない。
 
 ```json:tsconfig.json
 "jsx": "react",
 ```
 
-これで修正するとテストも成功するが、できればReactのimportなしでやりたい。
+これで修正するとテストも成功するが、できれば React の import なしでやりたい。
 色々と調べて二つ方法で解決できることを確認した。
 
-* esbuild-jestをそのまま使う。
-* .babelrcを生成して、babel-jestを使う。
+- esbuild-jest をそのまま使う。
+- .babelrc を生成して、babel-jest を使う。
 
 ### use the esbuild-jest
 
 [参照](https://github.com/aelbore/esbuild-jest/issues/70#issuecomment-1123452563)
 
-configというフォルダを作ってその配下にjest.jsファイルを以下のように生成する。
+config というフォルダを作ってその配下に jest.js ファイルを以下のように生成する。
 
 ```javascript:jest.js
 import * as React from "react";
@@ -330,7 +330,7 @@ import * as React from "react";
 global.React = React;
 ```
 
-jest.config.cjsファイルを開いて最後にsetupFilesAfterEnvという項目を追加する。
+jest.config.cjs ファイルを開いて最後に setupFilesAfterEnv という項目を追加する。
 
 ```javascript:jest.config.cjs
 ... snip ...
@@ -340,7 +340,7 @@ jest.config.cjsファイルを開いて最後にsetupFilesAfterEnvという項�
 };
 ```
 
-fileTransformer.jsも上記のようにconfigの配下に移してtsconfig.jsonのincludeも修正する。
+fileTransformer.js も上記のように config の配下に移して tsconfig.json の include も修正する。
 
 ```json:tsconfig.json
 ... snip ...
@@ -371,8 +371,8 @@ Time:        0.575 s, estimated 1 s
 Ran all test suites within paths "src/App.test.tsx".
 ```
 
-testing-libraryでは@testing-library/jest-domをimportしないといけない。
-App.test.tsxを修正する。
+testing-library では@testing-library/jest-dom を import しないといけない。
+App.test.tsx を修正する。
 
 ```javascript:App.test.tsx
 import "@testing-library/jest-dom";
@@ -404,7 +404,7 @@ Ran all test suites within paths "src/App.test.tsx".
 
 [参照](https://zenn.dev/crsc1206/articles/de79af226d0c69)
 
-CRAからViteへのマイグレーションのようにbabelのpresetをインストールして、.babelrcファイルを生成する。
+CRA から Vite へのマイグレーションのように babel の preset をインストールして、.babelrc ファイルを生成する。
 
 ```sh
 yarn add -D @babel/preset-env @babel/preset-react @babel/preset-typescript
@@ -432,8 +432,8 @@ yarn add -D @babel/preset-env @babel/preset-react @babel/preset-typescript
 }
 ```
 
-jest.config.cjsのtransformを修正する。
-esbuild-jest -> babel-jestで変更する。
+jest.config.cjs の transform を修正する。
+esbuild-jest -> babel-jest で変更する。
 
 ```javascript:jest.config.cjs
   transform: {
@@ -456,6 +456,6 @@ Time:        0.777 s
 Ran all test suites within paths "src/App.test.tsx".
 ```
 
-テスト結果にも出ているが、esbuild-jestがbabel-jestより早い。
-esbuild-jestはbabelによる変換なしでテストを行うので、早いみたい。
-webpack、babel、esbuildの違いをちゃんと理解した方がいい。[参照](https://zenn.dev/crsc1206/articles/0b0960fa306d71)
+テスト結果にも出ているが、esbuild-jest が babel-jest より早い。
+esbuild-jest は babel による変換なしでテストを行うので、早いみたい。
+webpack、babel、esbuild の違いをちゃんと理解した方がいい。[参照](https://zenn.dev/crsc1206/articles/0b0960fa306d71)
