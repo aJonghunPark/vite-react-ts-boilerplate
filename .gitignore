@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/react,macos,vim,direnv
-# Edit at https://www.toptal.com/developers/gitignore?templates=react,macos,vim,direnv
+# Created by https://www.toptal.com/developers/gitignore/api/storybookjs,react,macos,vim,direnv
+# Edit at https://www.toptal.com/developers/gitignore?templates=storybookjs,react,macos,vim,direnv
 
 ### direnv ###
 .direnv
@@ -54,6 +54,12 @@ psd
 thumb
 sketch
 
+### StorybookJs ###
+# gitignore template for the Storybook, UI guide for front apps
+# website: https://storybook.js.org/
+
+storybook-static/
+
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -75,4 +81,5 @@ tags
 # Persistent undo
 [._]*.un~
 
-# End of https://www.toptal.com/developers/gitignore/api/react,macos,vim,direnv
+# End of https://www.toptal.com/developers/gitignore/api/storybookjs,react,macos,vim,direnv
+src/__snapshots__/
