@@ -72,13 +72,13 @@ module.exports = {
 tsconfig.json の include に.eslintrc.cjs を追加。
 
 ```json:tsconfig.json
-{
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowJs": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -94,7 +94,7 @@ tsconfig.json の include に.eslintrc.cjs を追加。
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", ".eslintrc.cjs"],
+  "include": ["src", "config", ".eslintrc.cjs", "jest.config.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 ```
@@ -116,14 +116,17 @@ prettier --write .
 テスト関連パッケージをインストールする。
 
 ```sh
-yarn add -D jest ts-jest babel-jest @types/jest @testing-library/react @testing-library/jest-dom @testing-library/dom @testing-library/user-event jest-environment-jsdom identity-obj-proxy esbuild esbuild-jest
+yarn add -D jest ts-jest @types/jest @testing-library/react @testing-library/jest-dom @testing-library/dom @testing-library/user-event jest-environment-jsdom identity-obj-proxy
 ```
 
 jest の設定ファイルを作成する。
+esmを使うようにpresetを設定する。
+そして、transformでesmを使うようにts-jestを設定する。
+esbuild-jestを設定していたが、vimspectorのdebuggingのとき、typescriptがjavascriptで変換されてしまう。typescriptのままにしたい場合は、ts-jestを使わないといけない模様。
 
 ```javascript:jest.config.cjs
 module.exports = {
-  preset: "ts-jest",
+  preset: "ts-jest/presets/js-with-ts-esm",
   testEnvironment: "jest-environment-jsdom",
   testMatch: [
     "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -140,7 +143,7 @@ module.exports = {
     "^.+\\.(css|sass|scss)$": "identity-obj-proxy",
   },
   transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "esbuild-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": ["ts-jest", { useESM: true }],
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|mdx)$":
       "<rootDir>/fileTransformer.js",
   },
@@ -374,15 +377,19 @@ testing-library では@testing-library/jest-dom を import しないといけな
 App.test.tsx を修正する。
 
 ```javascript:App.test.tsx
-import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 
 import App from "./App";
 
-test("renders learn react link", () => {
+test("renders taskBox header", async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn more/i);
+  const linkElement = screen.getByText(/taskbox/i);
   expect(linkElement).toBeInTheDocument();
+  await waitForElementToBeRemoved(linkElement);
 });
 ```
 
@@ -399,7 +406,7 @@ Time:        0.421 s, estimated 1 s
 Ran all test suites within paths "src/App.test.tsx".
 ```
 
-### use the babel-jest
+### use the babel-jest（非推奨）
 
 [参照](https://zenn.dev/crsc1206/articles/de79af226d0c69)
 
