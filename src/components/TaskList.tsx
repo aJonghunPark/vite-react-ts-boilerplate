@@ -1,18 +1,43 @@
 import { FC } from "react";
 
 import "../index.css";
+import { useAppDispatch, useAppSelector } from "../lib/hook";
+import { updateTaskState } from "../lib/store";
 import Task, { ITask } from "./Task";
 
-interface Props {
-  tasks: ITask[];
-  loading: boolean;
-  onPinTask?: (id: number) => void;
-  onArchiveTask?: (id: number) => void;
-}
+// interface Props {
+//   tasks: ITask[];
+//   loading: boolean;
+//   onPinTask?: (id: number) => void;
+//   onArchiveTask?: (id: number) => void;
+// }
 
-const TaskList: FC<Props> = (props) => {
-  const { loading, tasks, onPinTask, onArchiveTask } = props;
-  const events = { onPinTask, onArchiveTask };
+const TaskList: FC = () => {
+  // const { loading, tasks, onPinTask, onArchiveTask } = props;
+  // const events = { onPinTask, onArchiveTask };
+  const tasks = useAppSelector((state) => {
+    const tasksInOrder = [
+      ...state.taskbox.tasks.filter((t) => t.state === "TASK_PINNED"),
+      ...state.taskbox.tasks.filter((t) => t.state !== "TASK_PINNED"),
+    ];
+    // const filteredTasks = tasksInOrder.filter(
+    //   (t) => t.state === "TASK_INBOX" || t.state === "TASK_PINNED"
+    // );
+    // return filteredTasks;
+    return tasksInOrder;
+  });
+
+  const { status } = useAppSelector((state) => state.taskbox);
+
+  const dispatch = useAppDispatch();
+
+  const pinTask = (value: number) => {
+    dispatch(updateTaskState({ id: value, newTaskState: "TASK_PINNED" }));
+  };
+
+  const archiveTask = (value: number) => {
+    dispatch(updateTaskState({ id: value, newTaskState: "TASK_ARCHIVED" }));
+  };
 
   const LoadingRow = (
     <div className="loading-item">
@@ -25,7 +50,7 @@ const TaskList: FC<Props> = (props) => {
     </div>
   );
 
-  if (loading) {
+  if (status === "loading") {
     return (
       <div className="list-items" data-testid="loading" key={"loading"}>
         {LoadingRow}
@@ -49,14 +74,19 @@ const TaskList: FC<Props> = (props) => {
     );
   }
 
-  const tasksInOrder = [
-    ...tasks.filter((t) => t.state === "TASK_PINNED"),
-    ...tasks.filter((t) => t.state !== "TASK_PINNED"),
-  ];
+  // const tasksInOrder = [
+  //   ...tasks.filter((t) => t.state === "TASK_PINNED"),
+  //   ...tasks.filter((t) => t.state !== "TASK_PINNED"),
+  // ];
   return (
     <div className="list-items">
-      {tasksInOrder.map((task) => (
-        <Task key={task.id} task={task} {...events} />
+      {tasks.map((task: ITask) => (
+        <Task
+          key={task.id}
+          task={task}
+          onPinTask={() => pinTask(task.id)}
+          onArchiveTask={() => archiveTask(task.id)}
+        />
       ))}
     </div>
   );

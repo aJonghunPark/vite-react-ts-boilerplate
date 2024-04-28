@@ -1,5 +1,5 @@
 module.exports = {
-  preset: "ts-jest",
+  preset: "ts-jest/presets/js-with-ts-esm",
   testEnvironment: "jest-environment-jsdom",
   testMatch: [
     "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -13,7 +13,7 @@ module.exports = {
     "^.+\\.(css|sass|scss)$": "identity-obj-proxy",
   },
   transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "esbuild-jest",
+    "^.+\\.(js|jsx|ts|tsx)$": ["ts-jest", { useESM: true }],
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|mdx)$":
       "<rootDir>/config/fileTransformer.js",
   },

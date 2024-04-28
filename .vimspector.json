@@ -1,0 +1,56 @@
+{
+  "configurations": {
+    "chrome": {
+      "adapter": "chrome",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "url": "http://localhost:5173/",
+        "webRoot": "${workspaceRoot}/public"
+      }
+    },
+    "jest": {
+      "adapter": "js-debug",
+      "filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "name": "Debug Jest Test",
+        "program": "${workspaceRoot}/node_modules/.bin/jest",
+        "args": [
+          "${fileBasenameNoExtension}",
+          "--config",
+          "${workspaceFolder}/jest.config.cjs"
+        ],
+        "console": "integratedTerminal",
+        "skipFiles": ["*/<node_internals>/**/*.js", "node_modules/**/*.js"],
+        "cwd": "${workspaceRoot}"
+      }
+    },
+    "storybook": {
+      "adapter": "chrome",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "url": "http://localhost:6006/",
+        "sourceMaps": true,
+        "webRoot": "${workspaceFolder}"
+      }
+    }
+  }
+}

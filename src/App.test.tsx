@@ -1,10 +1,14 @@
-import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 
 import App from "./App";
 
-test("renders learn react link", () => {
+test("renders taskBox header", async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn more/i);
+  const linkElement = screen.getByText(/taskbox/i);
   expect(linkElement).toBeInTheDocument();
+  await waitForElementToBeRemoved(linkElement);
 });

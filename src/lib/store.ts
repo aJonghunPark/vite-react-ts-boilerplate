@@ -1,0 +1,91 @@
+import {
+  Action,
+  ThunkAction,
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
+
+import { ITask } from "../components/Task";
+
+const defaultTasks = [
+  { id: 1, title: "Something", state: "TASK_INBOX" },
+  { id: 2, title: "Something more", state: "TASK_INBOX" },
+  { id: 3, title: "Something else", state: "TASK_INBOX" },
+  { id: 4, title: "Something again", state: "TASK_INBOX" },
+];
+
+interface taskBoxState {
+  tasks: ITask[];
+  status: string;
+  error: string | null;
+}
+
+const TaskBoxData: taskBoxState = {
+  tasks: defaultTasks,
+  status: "idle",
+  error: null,
+};
+
+export const fetchTasks = createAsyncThunk("todos/fetchTodos", async () => {
+  const response = await fetch(
+    "https://jsonplaceholder.typicode.com/todos?userId=1"
+  );
+  const data = await response.json();
+  const result = data.map((task: ITask) => ({
+    id: `${task.id}`,
+    title: task.title,
+    state: task.completed ? "TASK_ARCHIVED" : "TASK_INBOX",
+  }));
+  return result;
+});
+
+const TasksSlice = createSlice({
+  name: "taskbox",
+  initialState: TaskBoxData,
+  reducers: {
+    updateTaskState: (state, action) => {
+      const { id, newTaskState } = action.payload;
+      const task = state.tasks.findIndex((task) => task.id === id);
+      if (task >= 0) {
+        state.tasks[task].state = newTaskState;
+      }
+    },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchTasks.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+        state.tasks = [];
+      })
+      .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.status = "successed";
+        state.error = null;
+        state.tasks = action.payload;
+      })
+      .addCase(fetchTasks.rejected, (state) => {
+        state.status = "failed";
+        state.error = "Something went wrong";
+        state.tasks = [];
+      });
+  },
+});
+
+export const { updateTaskState } = TasksSlice.actions;
+
+const store = configureStore({
+  reducer: {
+    taskbox: TasksSlice.reducer,
+  },
+});
+
+export default store;
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
